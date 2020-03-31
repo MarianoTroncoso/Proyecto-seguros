@@ -9,6 +9,23 @@ function Seguro(marca, anio, tipo){
 // Constructor relacionado todo la interfaz de usuario
 function Interfaz(){} // inicializa vacio, lo cargamos con prototipos
 
+// para la funcion de mostrarError() de la interfaz
+// vamos a hacer un prototipo:
+Interfaz.prototype.mostrarError = function(mensaje, tipo){
+    const div = document.createElement('div');
+    if(tipo === 'error'){
+        // clase error anteriormente creada y con sus estilos
+        div.classList.add('mensaje', 'error');
+    } else {
+        div.classList.add('mensaje', 'correcto');
+    };
+    div.innerHTML = `${mensaje}`;
+    formulario.insertBefore(div, document.querySelector('.form-group'));
+
+    setTimeout(function(){
+        document.querySelector('.mensaje').remove();
+    }, 3000);
+}
 
 // Event Listeners
 // NO van en clases, en las clases va todo lo que sea datos
@@ -39,6 +56,8 @@ formulario.addEventListener('submit', function(e){
         // console.log('faltan datos')
 
         // interfaz mostrando error
+        interfaz.mostrarError('Faltan datos, revisar el formulario y prueba de nuevo','error' );
+
     } else {
         // lleno todo correctamente
         // hay que instanciar Seguro
