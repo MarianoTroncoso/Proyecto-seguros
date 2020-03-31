@@ -5,6 +5,45 @@ function Seguro(marca, anio, tipo){
     this.tipo = tipo;
 }
 
+Seguro.prototype.cotizarSeguro = function(informacion){
+    /*
+        1 = americano   1.15
+        2 = asiatico    1.05
+        3 = europeo     1.35
+
+        lo anterior sirve para multiplicar por la base
+    */
+    let cantidad;
+    const base = 2000;
+
+    switch(this.marca){
+        case '1':
+            cantidad = base * 1.15;
+            break;
+        case '2':
+            cantidad = base * 1.05;
+            break;
+        case '3':
+            cantidad = base * 1.35;
+            break;
+    };
+    
+    // leer año para el calculo del precio
+    const diferencia = new Date().getFullYear() - this.anio;
+    // cada año hay que reducir 3% el valor del seguro
+    cantidad -= ((diferencia*3)) * cantidad / 100;
+    /*
+        si el seguro es basico, se multiplica por 30% mas
+        si el seguro es completo, 50% mas
+    */
+   if(this.tipo === 'basico'){
+       cantidad *= 1.30;
+    } else{
+       cantidad *= 1.50;
+    };
+
+    return cantidad;
+}
 
 // Constructor relacionado todo la interfaz de usuario
 function Interfaz(){} // inicializa vacio, lo cargamos con prototipos
@@ -53,7 +92,6 @@ formulario.addEventListener('submit', function(e){
     
     // revisamos que los campos no esten vacios
     if(marcaSeleccionada === '' || anioSeleccionado === '' || tipo === ''){
-        // console.log('faltan datos')
 
         // interfaz mostrando error
         interfaz.mostrarError('Faltan datos, revisar el formulario y prueba de nuevo','error' );
@@ -61,7 +99,12 @@ formulario.addEventListener('submit', function(e){
     } else {
         // lleno todo correctamente
         // hay que instanciar Seguro
-        console.log('todo correcto')
+        const seguro = new Seguro(marcaSeleccionada, anioSeleccionado, tipo);
+        
+        // cotizar seguro
+        const cantidad = seguro.cotizarSeguro(seguro);
+
+        
 
     }
 });
