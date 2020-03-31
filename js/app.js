@@ -64,7 +64,37 @@ Interfaz.prototype.mostrarError = function(mensaje, tipo){
     setTimeout(function(){
         document.querySelector('.mensaje').remove();
     }, 3000);
-}
+};
+
+// imprime el resultado de la cotizacion
+Interfaz.prototype.mostrarResultado = function(seguro, total){
+    const resultado = document.getElementById('resultado');
+    let marca;
+
+    switch(seguro.marca){
+        case '1':
+            marca = 'Americano';
+            break;
+        case '2':
+            marca = 'Asiatico';
+            break;
+        case '3':
+            marca = 'Europeo';
+            break;
+    };
+   // crear un div
+   const div = document.createElement('div');
+   div.innerHTML = `
+        <p>Tu Resumen: </p>
+        <p>Marca: ${marca} </p>
+        <p>Año: ${seguro.anio} </p>
+        <p>Tipo: ${seguro.tipo} </p>
+        <p>TOTAL: $${total} </p>
+   `;
+   resultado.appendChild(div);
+};
+
+
 
 // Event Listeners
 // NO van en clases, en las clases va todo lo que sea datos
@@ -102,8 +132,9 @@ formulario.addEventListener('submit', function(e){
         const seguro = new Seguro(marcaSeleccionada, anioSeleccionado, tipo);
         
         // cotizar seguro
-        const cantidad = seguro.cotizarSeguro(seguro);
-
+        const cantidad = seguro.cotizarSeguro();
+        // mostrar el resultado
+        interfaz.mostrarResultado(seguro, cantidad);
         
 
     }
