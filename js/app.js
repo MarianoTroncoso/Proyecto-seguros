@@ -50,7 +50,7 @@ function Interfaz(){} // inicializa vacio, lo cargamos con prototipos
 
 // para la funcion de mostrarError() de la interfaz
 // vamos a hacer un prototipo:
-Interfaz.prototype.mostrarError = function(mensaje, tipo){
+Interfaz.prototype.mostrarMensaje = function(mensaje, tipo){
     const div = document.createElement('div');
     if(tipo === 'error'){
         // clase error anteriormente creada y con sus estilos
@@ -85,13 +85,20 @@ Interfaz.prototype.mostrarResultado = function(seguro, total){
    // crear un div
    const div = document.createElement('div');
    div.innerHTML = `
-        <p>Tu Resumen: </p>
+        <p class='header'>Tu Resumen: </p>
         <p>Marca: ${marca} </p>
         <p>Año: ${seguro.anio} </p>
         <p>Tipo: ${seguro.tipo} </p>
         <p>TOTAL: $${total} </p>
    `;
-   resultado.appendChild(div);
+   const spinner = document.querySelector('#cargando img');
+   spinner.style.display = 'block'
+
+   setTimeout(function(){
+    spinner.style.display='none';
+    resultado.appendChild(div);
+   }, 3000)
+   
 };
 
 
@@ -124,9 +131,16 @@ formulario.addEventListener('submit', function(e){
     if(marcaSeleccionada === '' || anioSeleccionado === '' || tipo === ''){
 
         // interfaz mostrando error
-        interfaz.mostrarError('Faltan datos, revisar el formulario y prueba de nuevo','error' );
+        interfaz.mostrarMensaje('Faltan datos, revisar el formulario y prueba de nuevo','error' );
 
     } else {
+
+        // limpiar posibles resultados anteriores
+        const resultados = document.querySelector('#resultado div');
+        if( resultados != null){
+            resultados.remove();
+        }
+
         // lleno todo correctamente
         // hay que instanciar Seguro
         const seguro = new Seguro(marcaSeleccionada, anioSeleccionado, tipo);
@@ -135,7 +149,7 @@ formulario.addEventListener('submit', function(e){
         const cantidad = seguro.cotizarSeguro();
         // mostrar el resultado
         interfaz.mostrarResultado(seguro, cantidad);
-        
+        interfaz.mostrarMensaje('Cotizando...', 'extio');
 
     }
 });
